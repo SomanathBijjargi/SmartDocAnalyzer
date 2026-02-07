@@ -76,7 +76,7 @@ LLM / AI Processing
 ---
 
 # 📁 Project Structure
-
+```
 SmartDocAnalyzer/
 │
 ├── Backend/ → Node.js backend
@@ -84,6 +84,7 @@ SmartDocAnalyzer/
 ├── ai_engine/ → Python AI processing
 ├── README.md
 └── .gitignore
+```
 
 
 ---
