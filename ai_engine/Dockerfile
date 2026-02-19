@@ -2,6 +2,12 @@ FROM python:3.10
 
 WORKDIR /app
 
+# install system libs required for opencv & paddle
+RUN apt-get update && apt-get install -y \
+    libgl1 \
+    poppler-utils \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
