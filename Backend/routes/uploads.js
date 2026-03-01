@@ -2,12 +2,11 @@ import express from "express";
 import multer from "multer";
 import protect from "../middleware/authMiddleware.js";
 import Document from "../models/Document.js";
-import { exec } from "child_process";
-import path from "path";
 import { generateSummary } from "../utils/gemini.js";
+import axios from "axios";
+import FormData from "form-data";
+import fs from "fs";
 
-const pythonPath = `"../.venv/Scripts/python.exe"`;
-const scriptPath = `"../ai_engine/ocr_runner.py"`;
 
 const router = express.Router();
 
@@ -30,43 +29,43 @@ const upload = multer({ storage });
 // =========================
 router.post("/", protect, upload.single("document"), async (req, res) => {
   try {
-    const filePath = path.join("uploads", req.file.filename);
+  const formData = new FormData();
+  formData.append("file", fs.createReadStream(req.file.path));
 
-    // Call Python OCR script
-    exec(
-      `${pythonPath} ${scriptPath} "${filePath}"`,
-      async (error, stdout, stderr) => {
-        if (error) {
-          console.error("OCR ERROR:", error);
-          return res.status(500).json({
-            message: "File uploaded but OCR failed"
-          });
-        }
+  const ocrResponse = await axios.post(
+    process.env.OCR_API_URL,
+    formData,
+    {
+      headers: formData.getHeaders(),
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity
+    }
+  );
 
-        const extractedText = stdout;
-        const summary = await generateSummary(extractedText);
-        // Save document with OCR text
-        const newDoc = new Document({
-          user: req.user,
-          filename: req.file.filename,
-          originalname: req.file.originalname,
-          extractedText: extractedText,
-          summary: summary
-        });
+  const extractedText = ocrResponse.data.extracted_text;
 
-        await newDoc.save();
+  const summary = await generateSummary(extractedText);
 
-        res.json({
-          message: "File uploaded, OCR completed & saved to DB",
-          extractedText,
-          summary:summary,
-        });
-      }
-    );
-  } catch (error) {
-    console.error("UPLOAD ERROR:", error);
-    res.status(500).json({ message: "Upload error" });
-  }
+  const newDoc = new Document({
+    user: req.user,
+    filename: req.file.filename,
+    originalname: req.file.originalname,
+    extractedText,
+    summary
+  });
+
+  await newDoc.save();
+
+  res.json({
+    message: "File uploaded, OCR completed & saved to DB",
+    extractedText,
+    summary
+  });
+
+} catch (error) {
+  console.error("OCR API ERROR:", error.message);
+  res.status(500).json({ message: "OCR service failed" });
+}
 });
 
 export default router;
