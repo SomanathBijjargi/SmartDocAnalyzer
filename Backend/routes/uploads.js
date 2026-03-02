@@ -50,6 +50,7 @@ router.post("/", protect, upload.single("document"), async (req, res) => {
     user: req.user,
     filename: req.file.filename,
     originalname: req.file.originalname,
+    mimetype: req.file.mimetype,
     extractedText,
     summary
   });

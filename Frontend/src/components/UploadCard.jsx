@@ -29,15 +29,15 @@ function UploadCard() {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-8 w-full">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 w-full">
 
       <div className="flex justify-between items-center">
 
         <div>
-          <h2 className="text-2xl font-semibold text-gray-800">
+          <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
             Upload New Document
           </h2>
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-500 dark:text-gray-400 text-sm">
             Supports PDF, images & handwritten notes
           </p>
         </div>
@@ -46,7 +46,7 @@ function UploadCard() {
           <input
             type="file"
             onChange={(e) => setFile(e.target.files[0])}
-            className="p-3 border rounded-lg bg-gray-50"
+            className="p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-100"
           />
 
           <button
@@ -61,11 +61,11 @@ function UploadCard() {
 
       {/* SUMMARY RESULT */}
       {summary && (
-        <div className="mt-6 bg-gray-50 p-5 rounded-xl">
-          <h3 className="font-semibold text-gray-700 mb-2">
+        <div className="mt-6 bg-gray-50 dark:bg-gray-700 p-5 rounded-xl">
+          <h3 className="font-semibold text-gray-700 dark:text-gray-100 mb-2">
             AI Summary:
           </h3>
-          <p className="text-gray-600">{summary}</p>
+          <p className="text-gray-600 dark:text-gray-200">{summary}</p>
         </div>
       )}
     </div>

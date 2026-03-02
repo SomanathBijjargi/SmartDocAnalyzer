@@ -16,6 +16,11 @@ const documentSchema = new mongoose.Schema({
     type: String
   },
 
+  mimetype: {
+    type: String,
+    default: ""
+  },
+
   uploadDate: {
     type: Date,
     default: Date.now

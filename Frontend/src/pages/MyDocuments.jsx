@@ -24,11 +24,6 @@ function MyDocuments() {
     }
   };
 
-
-  useEffect(() => {
-    fetchDocs();
-  }, []);
-
   const fetchDocs = async () => {
     try {
       const res = await API.get("/docs/my");
@@ -38,32 +33,36 @@ function MyDocuments() {
     }
   };
 
+  useEffect(() => {
+    fetchDocs();
+  }, []);
+
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#f8fafc]">
+    <div className="flex min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#f8fafc] dark:from-gray-950 dark:to-gray-900 transition-colors">
 
       <Sidebar />
 
       <div className="flex-1 p-10">
 
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-8">
           My Documents
         </h1>
 
         {/* DOCUMENT GRID */}
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
           {docs.map((doc) => (
-            <div key={doc._id} className="bg-white p-6 rounded-2xl shadow-md">
+            <div key={doc._id} className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
 
-              <h2 className="font-semibold text-lg text-gray-800">
+              <h2 className="font-semibold text-lg text-gray-800 dark:text-gray-100">
                 {doc.originalname}
               </h2>
 
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
                 {new Date(doc.createdAt).toLocaleDateString()}
               </p>
 
-              <p className="text-gray-600 mt-4 text-sm line-clamp-3">
+              <p className="text-gray-600 dark:text-gray-300 mt-4 text-sm line-clamp-3">
                 {doc.summary || "No summary yet"}
               </p>
 
